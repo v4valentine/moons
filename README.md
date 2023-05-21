@@ -8,4 +8,5 @@
 <ul>
     <li>Laravel 9</li>
     <li>php 8.0.26</li>
+    <li>extension de mongodb para php <a href="https://www.php.net/manual/es/mongodb.installation.windows.php">como instalar extension</a></li>
 </ul>
