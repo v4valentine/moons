@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'moonsdb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -90,6 +90,12 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+		
+		'moonsdb' => [
+			'driver' => 'mongodb',
+			'dsn' => env('DB_URI', 'mongodb+srv://novaremix1:7vkWOMb9SwsoPPDS@cluster0.k86q2qr.mongodb.net/?retryWrites=true&w=majority'),
+			'database' => 'moons',
+		],
 
     ],
 

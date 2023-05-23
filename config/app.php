@@ -176,6 +176,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+		//MONGODB
+		Jenssegers\Mongodb\MongodbServiceProvider::class,
 
     ],
 
@@ -191,7 +193,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
-    ])->toArray(),
+		'checkDatos' => app\helpers\checkDatos::class    
+	])->toArray(),
 
 ];
