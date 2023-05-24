@@ -18,6 +18,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/usuario/{nombre}/{contrasena}', [UsuarioController::class, 'guardar']);
-
-
+Route::get('/usuario/{usrId}', [UsuarioController::class, 'Eliminar']);
