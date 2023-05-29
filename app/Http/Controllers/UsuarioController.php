@@ -7,13 +7,28 @@ use App\Models\Usuario;
 use checkDatos;
 
 class UsuarioController extends Controller
-{
+{   
 
 	public function show($nombre){
-       return view('view_usuario', [
+       return view('keen.demo1.dist.apps.ecommerce.catalog.products.blade.php', [
            'usuario' => Usuario::where('nombre', '=', $nombre)->first()
        ]);
    }
+   
+   	public function login(Request $request){
+		
+		$usr = Usuario::where('nombre', '=', $request->nombre)->where('contrasena', '=', $request->contrasena)->first();
+		
+		if(empty($usr)){
+				return "";
+		}else{
+			return view('keen.demo1.dist.apps.ecommerce.catalog.products.blade.php', [
+				'usuario' => Usuario::where('nombre', '=', $request->nombre)->where('contrasena', '=', $request->contrasena)->first()
+			]);
+		}
+		
+   }
+   
    
    //SIRVE PARA GUARDAR NUEVOS USUARIOS
     public function guardar(Request $request){

@@ -9,10 +9,9 @@ use checkDatos;
 class CategoriaController extends Controller
 {
 
-	public function show($nombre){
-       return view('view_Categoria', [
-           'Categoria' => Categoria::where('nombre', '=', $nombre)->first()
-       ]);
+	//RETORNAR CATERORIA
+	public function getCategoria($id){
+           return 'Categoria' => Categoria::find($id);
    }
    
    //SIRVE PARA GUARDAR NUEVAS Categoria
@@ -33,6 +32,11 @@ class CategoriaController extends Controller
 				"valor" 		=> $request->valor,
 				"regex"			=> $REGEXDESCRIPCION,
 				"nombreCampo"	=> "categoria"
+		   ),
+		   	array(
+				"valor" 		=> $request->descripcion,
+				"regex"			=> $REGEXDESCRIPCION,
+				"nombreCampo"	=> "categoria"
 		   )
 		));
 		
@@ -48,9 +52,11 @@ class CategoriaController extends Controller
 		
 		//SI TODO SALE BIEN
 		if($camposErr === TRUE){
-			$categoria->videoId 		= $request->videoId,
+			$categoria->videoId 		= $request->videoId;
 			$categoria->stddel 			= 1;
 			$categoria->valor			= $request->valor;
+			$categoria->descripcion		= $request->descripcion;
+
 			
 			//--SE CREA EL NUEVO Categoria
 			$categoria->save();
@@ -83,6 +89,11 @@ class CategoriaController extends Controller
 				"valor" 		=> $request->valor,
 				"regex"			=> $REGEXDESCRIPCION,
 				"nombreCampo"	=> "categoria"
+		   ),
+		   	array(
+				"valor" 		=> $request->descripcion,
+				"regex"			=> $REGEXDESCRIPCION,
+				"nombreCampo"	=> "categoria"
 		   )
 		));
 		
@@ -97,8 +108,9 @@ class CategoriaController extends Controller
 		}
 		
 		if($camposErr === TRUE){
-			$categoria->videoId 		= $request->videoId,
+			$categoria->videoId 		= $request->videoId;
 			$categoria->valor			= $request->valor;
+			$categoria->descripcion		= $request->descripcion;
 			
 			//--ACTUALIZA LOS DATOS DEL Categoria
 			$categoria->save();

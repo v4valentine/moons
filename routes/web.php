@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\ComentarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +16,13 @@ use App\Http\Controllers\UsuarioController;
 |
 */
 
+Route::get('/comentario/{comId}/{comentario}/{videoId}/{usrId}', [ComentarioController::class, 'Actualizar']);
+
+
+//---RETORNA EL LOGIN SI NO SE RETORNA NINGURA URL VALIDA----------------------------------------------------------------------------------
 Route::get('/', function () {
-    return view('welcome');
+	return view('demo1.dist.authentication.layouts.corporate.sign-in');
 });
 
-Route::get('/usuario/{usrId}', [UsuarioController::class, 'Eliminar']);
+//---INICIA SESION EN EL APLICATIVO---------------------------------------------------------------------------------------------------------
+Route::post("/login",[ComentarioController::class, 'login']);

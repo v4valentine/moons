@@ -11,7 +11,7 @@ class VideoController extends Controller
 
 	public function show($nombre){
        return view('view_usuario', [
-           'video' => Video::where('nombre', '=', $nombre)->first()
+           'usuario' => Video::where('nombre', '=', $nombre)->first()
        ]);
    }
    
@@ -21,36 +21,57 @@ class VideoController extends Controller
        $video 	= new Video;
 	   //--SE VERIFICAN LOS DATOS
 	   
-	   $camposErr 	= checkDatos::verificarDatos(array(
+		$camposErr 	= checkDatos::verificarDatos(array(
 			//SE VERIFICA EL NOMBRE
 			array(
 				"valor" 		=> $request->nombre,
-				"regex"			=> "/^[a-zA-Z0-9]{0,20}$/",
+				"regex"			=> "/^[a-zA-Z0-9\s]{0,20}$/",
 				"nombreCampo"	=> "nombre"
 		   ),
-		   //SE VERIFICA LA CONTRASEÑA
+		   //SE VERIFICA EL URL
 		   array(
-				"valor" 		=> $request->contrasena,
-				"regex"			=> $REGEXPSSWORD,
-				"nombreCampo"	=> "contrasena"
-		   )
+				"valor" 		=> $request->url,
+				"regex"			=> checkDatos::REGEXDESCRIPCION,
+				"nombreCampo"	=> "url"
+		   ),
+		   //DESCRIPCION
+		   array(
+				"valor" 		=> $request->descripcion,
+				"regex"			=> checkDatos::REGEXDESCRIPCION,
+				"nombreCampo"	=> "descripción"
+		   ),
+		   //CATEGORIA
+		   array(
+				"valor" 		=> $request->categoriaId,
+				"regex"			=> checkDatos::REGEXID,
+				"nombreCampo"	=> "categoría"
+		   ),
+		   //PUNTUACION
+		   array(
+				"valor" 		=> $request->puntuacionId,
+				"regex"			=> checkDatos::REGEXID,
+				"nombreCampo"	=> "puntuación"
+		   ),
 		));
 		
 		//ERROR AL VERIFICAR LOS DATOS
 		if($camposErr === FALSE){
-			return response()->json(["success" => "0","msg" => "Error al registrar al usuario"], 201);
+			return response()->json(["success" => "0","msg" => "Error al registrar el video"], 201);
 		}
 
 		//RETORNA LOS CAMPOS CON ERRORES
 		if(is_array($camposErr)){
-			return response()->json(["success" => "2","msg" => "Error al registrar al usuario",$camposErr], 201);
+			return response()->json(["success" => "2","msg" => "Error al registrar el video",$camposErr], 201);
 		}
 		
 		//SI TODO SALE BIEN
 		if($camposErr === TRUE){
-			$video->nombre 		= $request->nombre;
-			$video->stddel 		= 1;
-			$video->contrasena	= $request->contrasena;
+			$video->nombre 			= $request->nombre;
+			$video->url				= $request->url;
+			$video->descripcion		= $request->descripcion;
+			$video->categoriaId		= $request->categoriaId;
+			$video->puntuacionId	= $request->puntuacionId;
+			$video->stddel 			= 1;
 			
 			//--SE CREA EL NUEVO USUARIO
 			$video->save();
@@ -81,25 +102,25 @@ class VideoController extends Controller
 		   //SE VERIFICA EL URL
 		   array(
 				"valor" 		=> $request->url,
-				"regex"			=> $REGEXURL,
+				"regex"			=> checkDatos::REGEXDESCRIPCION,
 				"nombreCampo"	=> "url"
 		   ),
 		   //DESCRIPCION
 		   array(
 				"valor" 		=> $request->descripcion,
-				"regex"			=> $REGEXDESCRIPCION,
+				"regex"			=> checkDatos::REGEXDESCRIPCION,
 				"nombreCampo"	=> "descripción"
 		   ),
 		   //CATEGORIA
 		   array(
 				"valor" 		=> $request->categoriaId,
-				"regex"			=> $REGEXID,
+				"regex"			=> checkDatos::REGEXID,
 				"nombreCampo"	=> "categoría"
 		   ),
 		   //PUNTUACION
 		   array(
 				"valor" 		=> $request->puntuacionId,
-				"regex"			=> $REGEXID,
+				"regex"			=> checkDatos::REGEXID,
 				"nombreCampo"	=> "puntuación"
 		   ),
 		));
@@ -115,8 +136,11 @@ class VideoController extends Controller
 		}
 		
 		if($camposErr === TRUE){
-			$video->nombre 		= $request->nombre;
-			$video->contrasena	= $request->contrasena;
+			$video->nombre 			= $request->nombre;
+			$video->url				= $request->url;
+			$video->descripcion		= $request->descripcion;
+			$video->categoriaId		= $request->categoriaId;
+			$video->puntuacionId	= $request->puntuacionId;
 			
 			//--ACTUALIZA LOS DATOS DEL USUARIO
 			$video->save();
@@ -134,7 +158,7 @@ class VideoController extends Controller
 			//SE VERIFICA EL NOMBRE
 			array(
 				"valor" 		=> $request->$vidId,
-				"regex"			=> $REGEXID,
+				"regex"			=> checkDatos::REGEXID,
 				"nombreCampo"	=> "video"
 		   )
 		));

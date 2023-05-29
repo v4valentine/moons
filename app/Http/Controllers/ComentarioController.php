@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Comentario;
 use checkDatos;
+use MongoDB\BSON;
 
 class ComentarioController extends Controller
 {
@@ -25,26 +26,20 @@ class ComentarioController extends Controller
 			//SE VERIFICA EL COMENTARIO
 			array(
 				"valor" 		=> $request->comentario,
-				"regex"			=> $REGEXDESCRIPCION,
+				"regex"			=> checkDatos::REGEXDESCRIPCION,
 				"nombreCampo"	=> "comentario"
 		   ),
 		   //SE VERIFICA EL VIDEO
 		   array(
 				"valor" 		=> $request->videoId,
-				"regex"			=> $REGEXID,
+				"regex"			=> checkDatos::REGEXID,
 				"nombreCampo"	=> "video"
 		   ),
 		   //SE VERIFICA EL USUARIO
 		   array(
 				"valor" 		=> $request->usrId,
-				"regex"			=> $REGEXID,
+				"regex"			=> checkDatos::REGEXID,
 				"nombreCampo"	=> "usuario"
-		   ),
-		   //SE VERIFICA LA PUNTUACION
-		   array(
-				"valor" 		=> $request->puntId,
-				"regex"			=> $REGEXID,
-				"nombreCampo"	=> "puntuacion"
 		   )
 		));
 		
@@ -60,11 +55,10 @@ class ComentarioController extends Controller
 		
 		//SI TODO SALE BIEN
 		if($camposErr === TRUE){
-			$comentario->comentario = $request->comentario,
-			$comentario->stddel 	= 1;
-			$comentario->videoId	= $request->videoId;
-			$comentario->usrId		= $request->usrId;
-			$comentario->puntId		= $request->puntId;
+			$comentario->comentario 		= $request->comentario;
+			$comentario->stddel 			= 1;
+			$comentario->videos_ids			= $request->videoId;
+			$comentario->usuarios_ids		= $request->usrId;
 			
 			//--SE CREA EL NUEVO Comentario
 			$comentario->save();
@@ -78,25 +72,31 @@ class ComentarioController extends Controller
 	//ACTUALIZA LOS DATOS DE LOS ComentarioS
     public function Actualizar(Request $request, $comId){
 		$comentario = new Comentario;
-		$comentario = Comentario::find($usrId);
+		$comentario = Comentario::find($comId);
 		
 		//VERIFICA QUE EL Comentario EXISTA
 		if(empty($comentario)){
 			return response()->json(["success" => "0","msg" => "El Comentario no existe"], 201);
 		}
 		
-		$camposErr 	= checkDatos::verificarDatos(array(
-			//SE VERIFICA EL NOMBRE
+	   $camposErr 	= checkDatos::verificarDatos(array(
+			//SE VERIFICA EL COMENTARIO
 			array(
-				"valor" 		=> $request->nombre,
-				"regex"			=> "/^[a-zA-Z0-9]{0,20}$/",
-				"nombreCampo"	=> "nombre"
+				"valor" 		=> $request->comentario,
+				"regex"			=> checkDatos::REGEXDESCRIPCION,
+				"nombreCampo"	=> "comentario"
 		   ),
-		   //SE VERIFICA LA CONTRASEÑA
+		   //SE VERIFICA EL VIDEO
 		   array(
-				"valor" 		=> $request->contrasena,
-				"regex"			=> "/^[\S]{0,20}$/",
-				"nombreCampo"	=> "contrasena"
+				"valor" 		=> $request->videoId,
+				"regex"			=> checkDatos::REGEXID,
+				"nombreCampo"	=> "video"
+		   ),
+		   //SE VERIFICA EL USUARIO
+		   array(
+				"valor" 		=> $request->usrId,
+				"regex"			=> checkDatos::REGEXID,
+				"nombreCampo"	=> "usuario"
 		   )
 		));
 		
@@ -111,8 +111,9 @@ class ComentarioController extends Controller
 		}
 		
 		if($camposErr === TRUE){
-			$comentario->nombre 		= $request->nombre;
-			$comentario->contrasena	= $request->contrasena;
+			$comentario->comentario 		= $request->comentario;
+			$comentario->videos_ids			= 
+			$comentario->usuarios_ids		= $request->usrId;
 			
 			//--ACTUALIZA LOS DATOS DEL Comentario
 			$comentario->save();
@@ -123,9 +124,9 @@ class ComentarioController extends Controller
    }
    
    	//ELIMINA LOS DATOS DE LOS ComentarioS
-    public function Eliminar(Request $request,$usrId){
+    public function Eliminar(Request $request,$comId){
 		$comentario = new Comentario;
-		$comentario = Comentario::find($usrId);
+		$comentario = Comentario::find($comId);
 		
 		//VERIFICA QUE EL Comentario EXISTA
 		if(empty($comentario)){

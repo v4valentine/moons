@@ -9,10 +9,9 @@ use checkDatos;
 class PuntuacionesController extends Controller
 {
 
-	public function show($nombre){
-       return view('view_Puntuacion', [
-           'Puntuacion' => Puntuacion::where('nombre', '=', $nombre)->first()
-       ]);
+	//RETORNA LA PUNTUACION DEPENDIENDO DEL ID INGRESADO
+	public function getPuntuacion($nombre){
+        return 'Puntuacion' => Puntuacion::find('nombre', '=', $nombre);
    }
    
    //SIRVE PARA GUARDAR NUEVAS Puntuacion
@@ -31,7 +30,7 @@ class PuntuacionesController extends Controller
 		   //SE VERIFICA LA VIDEO
 		   array(
 				"valor" 		=> $request->valor,
-				"regex"			=> "/^[0-9]{0,}$/",
+				"regex"			=> "/^[0-9]{0,5}$/",
 				"nombreCampo"	=> "valor"
 		   )
 		));
@@ -81,7 +80,7 @@ class PuntuacionesController extends Controller
 		   //SE VERIFICA LA VIDEO
 		   array(
 				"valor" 		=> $request->valor,
-				"regex"			=> "/^[0-9]{0,}$/",
+				"regex"			=> "/^[0-9]{0,5}$/",
 				"nombreCampo"	=> "valor"
 		   )
 		));

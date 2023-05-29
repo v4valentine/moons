@@ -4,8 +4,7 @@
    <title>MyBlog</title>
 </head>
 <body>
-   <h1>{{$usuario->nombre}}</h1>
-   <div>{{$usuario->addDate}}</div>
-   <div>{{$usuario->contrasena}}</div>
+   <h1>{{$usuario}}</h1>
+
 </body>
 </html>
