@@ -9,63 +9,28 @@ use checkDatos;
 class CategoriaController extends Controller
 {
 
-	//RETORNAR CATERORIA
-	public function getCategoria($id){
-           return 'Categoria' => Categoria::find($id);
-   }
-   
+	public function todo(Request $request){
+		$categorias = Categoria::all();
+			return view('demo1.dist.apps.ecommerce.catalog.add-product',["categorias" => $categorias = Categoria::all()]
+		);
+	}
+
    //SIRVE PARA GUARDAR NUEVAS Categoria
     public function guardar(Request $request){
 		
        $categoria 	= new Categoria;
 	   //--SE VERIFICAN LOS DATOS
 	   
-	   $camposErr 	= checkDatos::verificarDatos(array(
-			//SE VERIFICA EL ID DEL VIDEO
-			array(
-				"valor" 		=> $request->videoId,
-				"regex"			=> $REGEXID,
-				"nombreCampo"	=> "video"
-		   ),
-		   //SE VERIFICA LA CATEGORIA
-		   array(
-				"valor" 		=> $request->valor,
-				"regex"			=> $REGEXDESCRIPCION,
-				"nombreCampo"	=> "categoria"
-		   ),
-		   	array(
-				"valor" 		=> $request->descripcion,
-				"regex"			=> $REGEXDESCRIPCION,
-				"nombreCampo"	=> "categoria"
-		   )
-		));
-		
-		//ERROR AL VERIFICAR LOS DATOS
-		if($camposErr === FALSE){
-			return response()->json(["success" => "0","msg" => "Error al registrar al Categoria"], 201);
-		}
-
-		//RETORNA LOS CAMPOS CON ERRORES
-		if(is_array($camposErr)){
-			return response()->json(["success" => "2","msg" => "Error al registrar al Categoria",$camposErr], 201);
-		}
-		
 		//SI TODO SALE BIEN
-		if($camposErr === TRUE){
-			$categoria->videoId 		= $request->videoId;
-			$categoria->stddel 			= 1;
-			$categoria->valor			= $request->valor;
-			$categoria->descripcion		= $request->descripcion;
-
-			
-			//--SE CREA EL NUEVO Categoria
-			$categoria->save();
-			
-			return response()->json(["success" => "1","msg" => "Categoria registrado"], 201);
-			
-		}
+		$categoria->videoId 		= session("USR")->_id;
+		$categoria->stddel 			= 1;
+		$categoria->valor			= $request->nombre;
 		
-   }
+		//--SE CREA EL NUEVO Categoria
+		$categoria->save();
+		
+		return view('demo1.dist.apps.ecommerce.catalog.add-category');
+	}
    
 	//ACTUALIZA LOS DATOS DE LOS Categoria
     public function Actualizar(Request $request, $catId){
@@ -97,18 +62,8 @@ class CategoriaController extends Controller
 		   )
 		));
 		
-		//ERROR AL VERIFICAR LOS DATOS
-		if($camposErr === FALSE){
-			return response()->json(["success" => "0","msg" => "Error al registrar al Categoria"], 201);
-		}
-
-		//RETORNA LOS CAMPOS CON ERRORES
-		if(is_array($camposErr)){
-			return response()->json(["success" => "2","msg" => "Error al registrar al Categoria",$camposErr], 201);
-		}
-		
 		if($camposErr === TRUE){
-			$categoria->videoId 		= $request->videoId;
+			$categoria->videoId 		= session("USR")->_id;;
 			$categoria->valor			= $request->valor;
 			$categoria->descripcion		= $request->descripcion;
 			

@@ -4,21 +4,82 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Video;
+use App\Models\Categoria;
+use App\Http\Controllers\CategoriaController;
+use App\Models\Comentario;
+use App\Models\Usuario;
 use checkDatos;
 
 class VideoController extends Controller
 {
 
-	public function show($nombre){
-       return view('view_usuario', [
-           'usuario' => Video::where('nombre', '=', $nombre)->first()
-       ]);
-   }
+   public function ver(Request $request,$v){
+
+		$comentarios 	= Comentario::where('videoId', '=',$v)->get();
+		$video			= Video::find($v);
+		$usuarios_pre	= Usuario::all();
+
+		$usuarios_res 	= array();
+
+		foreach ($comentarios as $c) {
+			foreach ($usuarios_pre as $u) {
+				if($c->usrId == $u->_id){
+
+					$r['nombre'] 	= $u->nombre;
+					$r['_id'] 		= $u->_id;
+
+					$usuarios_res[] = $r;
+
+				}
+			}
+		}
+
+		$propietario		= Usuario::find($video->usuarioId);
+
+		return view('demo1.dist.apps.ecommerce.customers.details', [
+			'comentarios' 	=> $comentarios,
+			'usuarios'		=> $usuarios_res,
+			"video"			=> $video,
+			"propietario"	=> $propietario
+		]);
+
+	}
+
+   public function todos(){
+		$categoria = Categoria::all();
+		$videos = Video::all();
+
+		$res	= array();
+
+		foreach ($videos as $key) {
+			foreach ($categoria as $key2) {
+				if($key->categoriaId == $key2->_id){
+					
+					$r["_id"] 			= $key->_id;
+					$r["nombre"] 		= $key->nombre;
+					$r["categoria"] 	= $key2->valor;
+
+					$res[] = (object) $r;
+
+				}
+			}
+		}
+
+		$res2 = array(
+			"data" 				=> $res,
+			"recordsTotal"		=> count($res),
+			"recordsFiltered"	=> count($res),
+			"draw"				=> count($res)
+		);
+
+		return json_encode($res2);
+	}
    
    //SIRVE PARA GUARDAR NUEVOS USUARIOS
     public function guardar(Request $request){
 		
        $video 	= new Video;
+	   $cat 	= new CategoriaController();
 	   //--SE VERIFICAN LOS DATOS
 	   
 		$camposErr 	= checkDatos::verificarDatos(array(
@@ -28,40 +89,24 @@ class VideoController extends Controller
 				"regex"			=> "/^[a-zA-Z0-9\s]{0,20}$/",
 				"nombreCampo"	=> "nombre"
 		   ),
-		   //SE VERIFICA EL URL
-		   array(
-				"valor" 		=> $request->url,
-				"regex"			=> checkDatos::REGEXDESCRIPCION,
-				"nombreCampo"	=> "url"
-		   ),
 		   //DESCRIPCION
 		   array(
 				"valor" 		=> $request->descripcion,
 				"regex"			=> checkDatos::REGEXDESCRIPCION,
 				"nombreCampo"	=> "descripción"
 		   ),
-		   //CATEGORIA
-		   array(
-				"valor" 		=> $request->categoriaId,
-				"regex"			=> checkDatos::REGEXID,
-				"nombreCampo"	=> "categoría"
-		   ),
-		   //PUNTUACION
-		   array(
-				"valor" 		=> $request->puntuacionId,
-				"regex"			=> checkDatos::REGEXID,
-				"nombreCampo"	=> "puntuación"
-		   ),
+
+		   
 		));
 		
 		//ERROR AL VERIFICAR LOS DATOS
 		if($camposErr === FALSE){
-			return response()->json(["success" => "0","msg" => "Error al registrar el video"], 201);
+			return $cat->todo();
 		}
 
 		//RETORNA LOS CAMPOS CON ERRORES
 		if(is_array($camposErr)){
-			return response()->json(["success" => "2","msg" => "Error al registrar el video",$camposErr], 201);
+			return $cat->todo();
 		}
 		
 		//SI TODO SALE BIEN
@@ -69,14 +114,14 @@ class VideoController extends Controller
 			$video->nombre 			= $request->nombre;
 			$video->url				= $request->url;
 			$video->descripcion		= $request->descripcion;
-			$video->categoriaId		= $request->categoriaId;
-			$video->puntuacionId	= $request->puntuacionId;
+			$video->usuarioId		= session("USR")->_id;
+			$video->categoriaId		= $request->categoria;
 			$video->stddel 			= 1;
 			
 			//--SE CREA EL NUEVO USUARIO
 			$video->save();
 			
-			return response()->json(["success" => "1","msg" => "Usuario registrado"], 201);
+			return $cat->todo();
 			
 		}
 		

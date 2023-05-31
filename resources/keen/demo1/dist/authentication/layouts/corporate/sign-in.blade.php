@@ -54,7 +54,7 @@ License: For each use you must have a valid license purchased only from above li
 					<div class="d-flex flex-column flex-center p-6 p-lg-10 w-100">
 						<!--begin::Image-->
 						<img class="d-none d-lg-block mx-auto w-300px w-lg-75 w-xl-500px mb-10 mb-lg-20" src="assets/media/illustrations/artemisa.png" 
-						style=" width: fit-content!important; height: 35rem;" alt="" />
+						 alt="" />
 						<!--end::Image-->
 						<!--end::Text-->
 					</div>
@@ -68,7 +68,8 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Wrapper-->
 						<div class="w-lg-500px p-10">
 							<!--begin::Form-->
-							<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="/login">
+							<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="/login" method="POST">
+								<input type="hidden" name="_token" value="{{ csrf_token() }}">
 								<!--begin::Heading-->
 								<div class="text-center mb-11">
 									<!--begin::Title-->
@@ -78,13 +79,13 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Input group=-->
 								<div class="fv-row mb-8">
 									<!--begin::Email-->
-									<input type="text" placeholder="Usuario" name="email" autocomplete="off" class="form-control bg-transparent" />
+									<input type="text" placeholder="Usuario" name="nombre" autocomplete="off" class="form-control bg-transparent" />
 									<!--end::Email-->
 								</div>
 								<!--end::Input group=-->
 								<div class="fv-row mb-3">
 									<!--begin::Password-->
-									<input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
+									<input type="password" placeholder="Password" name="contrasena" autocomplete="off" class="form-control bg-transparent" />
 									<!--end::Password-->
 								</div>
 								<div class="d-grid mb-10">

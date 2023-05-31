@@ -106,20 +106,7 @@ var KTAppEcommerceProducts = function () {
 
 
     // Public methods
-    return {
-        init: function () {
-            table = document.querySelector('#kt_ecommerce_products_table');
 
-            if (!table) {
-                return;
-            }
-
-            initDatatable();
-            handleSearchDatatable();
-            handleStatusFilter();
-            handleDeleteRows();
-        }
-    };
 }();
 
 // On document ready

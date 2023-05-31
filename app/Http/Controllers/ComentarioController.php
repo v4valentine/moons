@@ -21,51 +21,18 @@ class ComentarioController extends Controller
 		
        $comentario 	= new Comentario;
 	   //--SE VERIFICAN LOS DATOS
-	   
-	   $camposErr 	= checkDatos::verificarDatos(array(
-			//SE VERIFICA EL COMENTARIO
-			array(
-				"valor" 		=> $request->comentario,
-				"regex"			=> checkDatos::REGEXDESCRIPCION,
-				"nombreCampo"	=> "comentario"
-		   ),
-		   //SE VERIFICA EL VIDEO
-		   array(
-				"valor" 		=> $request->videoId,
-				"regex"			=> checkDatos::REGEXID,
-				"nombreCampo"	=> "video"
-		   ),
-		   //SE VERIFICA EL USUARIO
-		   array(
-				"valor" 		=> $request->usrId,
-				"regex"			=> checkDatos::REGEXID,
-				"nombreCampo"	=> "usuario"
-		   )
-		));
-		
-		//ERROR AL VERIFICAR LOS DATOS
-		if($camposErr === FALSE){
-			return response()->json(["success" => "0","msg" => "Error al registrar al Comentario"], 201);
-		}
-
-		//RETORNA LOS CAMPOS CON ERRORES
-		if(is_array($camposErr)){
-			return response()->json(["success" => "2","msg" => "Error al registrar al Comentario",$camposErr], 201);
-		}
-		
-		//SI TODO SALE BIEN
-		if($camposErr === TRUE){
+	
 			$comentario->comentario 		= $request->comentario;
 			$comentario->stddel 			= 1;
-			$comentario->videos_ids			= $request->videoId;
-			$comentario->usuarios_ids		= $request->usrId;
+			$comentario->videoId			= $request->video;
+			$comentario->usrId				= session()->get('USR')->_id;
 			
 			//--SE CREA EL NUEVO Comentario
 			$comentario->save();
 			
 			return response()->json(["success" => "1","msg" => "Comentario registrado"], 201);
 			
-		}
+		
 		
    }
    

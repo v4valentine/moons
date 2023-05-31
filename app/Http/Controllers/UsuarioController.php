@@ -11,24 +11,44 @@ class UsuarioController extends Controller
 
 	public function show($nombre){
        return view('keen.demo1.dist.apps.ecommerce.catalog.products.blade.php', [
-           'usuario' => Usuario::where('nombre', '=', $nombre)->first()
+           'usuario' => Usuario::where('nombre', '=', $nombre)
        ]);
    }
+
+	public function lista($nombre){
+		return view('keen.demo1.dist.apps.ecommerce.catalog.products.blade.php', [
+			'usuario' => Usuario::where('nombre', '=', $nombre)
+		]);
+	}
    
    	public function login(Request $request){
 		
 		$usr = Usuario::where('nombre', '=', $request->nombre)->where('contrasena', '=', $request->contrasena)->first();
 		
-		if(empty($usr)){
-				return "";
+		if(empty($usr) & empty($request->session()->exists('USR'))){
+			return view('demo1.dist.authentication.layouts.corporate.sign-in');
+		}else if(empty($request->session()->exists('USR'))){
+
+			//GUARDA AL USUARIO EN SESION
+			$request->session()->put("USR",$usr);
+
+			return view('demo1.dist.apps.ecommerce.catalog.products', [
+				'usuario' => $usr
+			]);
 		}else{
-			return view('keen.demo1.dist.apps.ecommerce.catalog.products.blade.php', [
-				'usuario' => Usuario::where('nombre', '=', $request->nombre)->where('contrasena', '=', $request->contrasena)->first()
+			return view('demo1.dist.apps.ecommerce.catalog.products', [
+				'usuario' => $usr
 			]);
 		}
-		
    }
-   
+
+   public function log_out(Request $request){
+		//CIERRA LA SESION DEL USUARIO
+		$request->session()->forget("USR");
+
+		return view('demo1.dist.authentication.layouts.corporate.sign-in');
+
+   }
    
    //SIRVE PARA GUARDAR NUEVOS USUARIOS
     public function guardar(Request $request){
